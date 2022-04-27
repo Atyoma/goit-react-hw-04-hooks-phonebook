@@ -1,60 +1,45 @@
 //=========================Hooks======================
-import {useState,useEffect} from 'react';
-import  ContactForm  from './ContactForm/ContactForm';
+import { useState } from 'react';
+import useLocalStorage from 'hooks/useLocalStorage';
+import ContactForm from './ContactForm/ContactForm';
 import { Filter } from './Filter/Filter';
 import { ContactList } from './ContactList/ContactList';
-import { FormBox, Phonebook} from './ContactForm/ContactForm.styled';
+import { FormBox, Phonebook } from './ContactForm/ContactForm.styled';
 import { ContactListBox } from './ContactList/ContactList.styled';
 import { nanoid } from 'nanoid';
-import PropTypes from 'prop-types';
 
 export default function App() {
-  const [contacts, setContacts] = useState(() => {
-    return JSON.parse(window.localStorage.getItem("Contacts")) ?? [
-    { id: "id-1", name: "Rosie Simpson", number: "459-12-56" },
-    { id: "id-2", name: "Hermione Kline", number: "443-89-12" },
-    { id: "id-3", name: "Eden Clements", number: "645-17-79" },
-    { id: "id-4", name: "Annie Copeland", number: "227-91-26" },
-    ]})
-  
-  const [filter, setFilter] = useState('')
+  const [contacts, setContacts] = useLocalStorage('Contacts', [
+    { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+    { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+    { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+    { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+  ]);
 
-  
-  const onDelete = (id) => {
-    setContacts(contacts=> contacts.filter((contact) => contact.id !== id));
+  const [filter, setFilter] = useState('');
+
+  const onDelete = id => {
+    setContacts(contacts => contacts.filter(contact => contact.id !== id));
   };
-  
-  const matchСheck = (data) => {
+
+  const matchСheck = data => {
     const currentName = contacts.find(
-      (el) => el.name.toLowerCase() === data.name.toLowerCase()
+      el => el.name.toLowerCase() === data.name.toLowerCase()
     );
-    if (currentName) return alert(currentName.name + " is already in contacts");
+    if (currentName) return alert(currentName.name + ' is already in contacts');
 
     data.id = nanoid();
-    setContacts( contacts => [data, ...contacts] );
+    setContacts(contacts => [data, ...contacts]);
   };
 
-
-  const normalizedFilter = filter.toLowerCase();
-  const filteredContacts = contacts.filter(contact => (contact.name.toLowerCase().includes(normalizedFilter))
-  ) ;
-  console.log(contacts)
-
-  const filterChange = (e) => {
+  const filterChange = e => {
     e.preventDefault();
-    setFilter({ filter: e.currentTarget.value });
+    setFilter(e.currentTarget.value);
   };
-  
-  
-  
-  useEffect(() => {
-  
-    localStorage.setItem("Contacts", JSON.stringify(contacts));
-    
-  }, [contacts, filter])
-  
-
-
+  const normalizedFilter = filter.toLowerCase();
+  const filteredContacts = contacts.filter(contact =>
+    contact.name.toLowerCase().includes(normalizedFilter)
+  );
   return (
     <Phonebook>
       <FormBox>
@@ -73,15 +58,6 @@ export default function App() {
     </Phonebook>
   );
 }
-
-ContactForm.propTypes = {
-  submitHandle: PropTypes.func
-}
-
-
-
-
-
 
 //====================Class============================
 
@@ -167,13 +143,3 @@ ContactForm.propTypes = {
 // ContactForm.propTypes = {
 //   submitHandle: PropTypes.func
 // }
-
-
-
-
-
-
-
-
-
-
