@@ -5,8 +5,8 @@ import { InputItem, AddContact } from './ContactForm.styled';
 import { Formik, Form } from 'formik';
 
 export default function ContactForm({ submitHandle }) {
-  const [name, stateName] = useState('');
-  const [number, stateNumber] = useState('');
+  const [name] = useState('');
+  const [number] = useState('');
 
   const onSubmit = (values, action) => {
     submitHandle(values);
